@@ -1,23 +1,66 @@
 import axios from 'axios';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
+// const BASE_URL = 'https://pixabay.com/api/';
+// const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
+// const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=100&page=${this.page}`;
 
 export default class ApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
+    this.totalHits = 5;
+    this.total = null;
   }
+
   fetchImages() {
-    console.log(this);
     const BASE_URL = 'https://pixabay.com/api/';
     const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
-    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
+    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=100&page=${this.page}`;
 
-    // & page=${ page }
-
-    fetch(`${BASE_URL}${params}`)
+    return fetch(`${BASE_URL}${params}`)
       .then(response => response.json())
-      .then(result => {
-        console.log(result);
+      .then(({ hits, total, totalHits }) => {
+        console.log('Totalhits: ', totalHits);
+        console.log('Total', total);
         this.incrementPage();
+        if (total === 0) {
+          return Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+        }
+
+        if (totalHits === total) {
+          Notify.failure(
+            'Were sorry, but youve reached the end of search results.'
+          );
+          return hits;
+        }
+        // this.currentHits += hits.length;
+        // console.log(hits.length);
+        // if (totalHits === total) {
+        //   console.log('oooooooo');
+        //   return Notify.failure(
+        //     'Were sorry, but youve reached the end of search results.'
+        //   );
+        // }
+        return hits;
+      });
+  }
+
+  noMorePages() {
+    return fetch(`${BASE_URL}${params}`)
+      .then(response => response.json())
+      .then(({ hits, total, totalHits }) => {
+        console.log('Totalhits: ', totalHits);
+        console.log('Total', total);
+        this.incrementPage();
+        if (totalHits === total) {
+          Notify.failure(
+            'Were sorry, but youve reached the end of search results.'
+          );
+          return hits;
+        }
       });
   }
 
@@ -36,17 +79,4 @@ export default class ApiService {
   set query(newQuery) {
     this.searchQuery = newQuery;
   }
-}
-
-async function fetchImages(value, page) {
-  //   const BASE_URL = 'https://pixabay.com/api/';
-  //   const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
-  //   const params = `?key=${API_KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${page}`;
-  //   return fetch(`${BASE_URL}${params}`)
-  //     .then(response => response.json())
-  //     .then(console.log);
-  //   return await axios
-  //     .get(`${BASE_URL}${params}`)
-  //     .then(response => response.json())
-  //     .then(console.log);
 }

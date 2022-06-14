@@ -12,22 +12,24 @@ export default class ApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.totalHits = 5;
-    this.total = null;
   }
 
   fetchImages() {
     const BASE_URL = 'https://pixabay.com/api/';
     const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
-    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
+    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3&page=${this.page}`;
 
     return fetch(`${BASE_URL}${params}`)
       .then(response => response.json())
       .then(({ hits, total, totalHits }) => {
-        console.log('Totalhits: ', totalHits);
+        // console.log('Totalhits: ', totalHits);
         // console.log('Total', total);
 
-        this.onFirstPageNotify();
+        if (this.page === 1) {
+          // console.log('TotalHits', totalHits);
+          Notify.success(`Hooray! We found ${totalHits} images.`);
+        }
+
         this.incrementPage();
 
         if (total === 0) {
@@ -47,12 +49,12 @@ export default class ApiService {
       });
   }
 
-  onFirstPageNotify() {
-    if (this.page === 1) {
-      console.log('TotalHits', this.totalHits);
-      Notify.success(`Hooray! We found ${this.totalHits} images.`);
-    }
-  }
+  // onFirstPageNotify() {
+  //   if (this.page === 1) {
+  //     console.log('TotalHits', this.totalHits);
+  //     Notify.success(`Hooray! We found ${this.totalHits} images.`);
+  //   }
+  // }
 
   // noMorePages() {
   //   refs.loadMoreBtn.classList.add('is-hidden');

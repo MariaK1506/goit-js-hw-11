@@ -3,11 +3,11 @@ import galleryTpl from './templates/galleryImages.hbs';
 import ApiService from './js/api-service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
-
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = getRefs();
 const apiService = new ApiService();
+let lightbox;
 
 refs.searchForm.addEventListener('submit', onSearchForm);
 refs.loadMoreBtn.addEventListener('click', fetchHits);
@@ -30,12 +30,22 @@ function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendGalleryMarkup(hits);
     showLoadMoreBtn();
-    // apiService.noMorePages();
+    onScroll();
+    lightbox.refresh();
   });
+  // lightbox.refresh();
 }
 
 function appendGalleryMarkup(hits) {
   refs.galleryList.insertAdjacentHTML('beforeend', galleryTpl(hits));
+  const options = {
+    captions: true,
+    captionsData: 'alt',
+    captionPosition: 'bottom',
+    captionDelay: 250,
+  };
+
+  lightbox = new SimpleLightbox('.photo-card a', options);
 }
 
 function clearGalleryList() {
@@ -52,11 +62,13 @@ function showLoadMoreBtn() {
   refs.loadMoreBtn.disabled = false;
 }
 
-const options = {
-  captions: true,
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250,
-};
+function onScroll() {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
 
-const lightbox = new SimpleLightbox('.photo-card a', options);
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}

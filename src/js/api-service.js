@@ -14,13 +14,14 @@ export default class ApiService {
     this.page = 1;
   }
 
-  fetchImages() {
+  async fetchImages() {
     const BASE_URL = 'https://pixabay.com/api/';
     const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
     const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3&page=${this.page}`;
 
-    return fetch(`${BASE_URL}${params}`)
-      .then(response => response.json())
+    return await axios
+      .get(`${BASE_URL}${params}`)
+      .then(response => response.data)
       .then(({ hits, total, totalHits }) => {
         // console.log('Totalhits: ', totalHits);
         // console.log('Total', total);

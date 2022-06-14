@@ -1,9 +1,12 @@
 import axios from 'axios';
+import getRefs from './get-refs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 // const BASE_URL = 'https://pixabay.com/api/';
 // const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
 // const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=100&page=${this.page}`;
+
+const refs = getRefs();
 
 export default class ApiService {
   constructor() {
@@ -16,7 +19,7 @@ export default class ApiService {
   fetchImages() {
     const BASE_URL = 'https://pixabay.com/api/';
     const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
-    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=100&page=${this.page}`;
+    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3&page=${this.page}`;
 
     return fetch(`${BASE_URL}${params}`)
       .then(response => response.json())
@@ -31,38 +34,21 @@ export default class ApiService {
         }
 
         if (totalHits === total) {
+          refs.loadMoreBtn.classList.add('is-hidden');
           Notify.failure(
             'Were sorry, but youve reached the end of search results.'
           );
           return hits;
         }
-        // this.currentHits += hits.length;
-        // console.log(hits.length);
-        // if (totalHits === total) {
-        //   console.log('oooooooo');
-        //   return Notify.failure(
-        //     'Were sorry, but youve reached the end of search results.'
-        //   );
-        // }
+
         return hits;
       });
   }
 
-  noMorePages() {
-    return fetch(`${BASE_URL}${params}`)
-      .then(response => response.json())
-      .then(({ hits, total, totalHits }) => {
-        console.log('Totalhits: ', totalHits);
-        console.log('Total', total);
-        this.incrementPage();
-        if (totalHits === total) {
-          Notify.failure(
-            'Were sorry, but youve reached the end of search results.'
-          );
-          return hits;
-        }
-      });
-  }
+  // noMorePages() {
+  //   refs.loadMoreBtn.classList.add('is-hidden');
+  //   Notify.failure('Were sorry, but youve reached the end of search results.');
+  // }
 
   incrementPage() {
     this.page += 1;

@@ -27,7 +27,7 @@ function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendGalleryMarkup(hits);
     showLoadMoreBtn();
-    apiService.noMorePages();
+    // apiService.noMorePages();
   });
 }
 

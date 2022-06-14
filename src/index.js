@@ -2,6 +2,9 @@ import getRefs from './js/get-refs';
 import galleryTpl from './templates/galleryImages.hbs';
 import ApiService from './js/api-service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from 'simplelightbox';
+
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const refs = getRefs();
 const apiService = new ApiService();
@@ -48,3 +51,12 @@ function showLoadMoreBtn() {
   refs.loadMoreBtn.classList.remove('is-hidden');
   refs.loadMoreBtn.disabled = false;
 }
+
+const options = {
+  captions: true,
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+};
+
+const lightbox = new SimpleLightbox('.photo-card a', options);

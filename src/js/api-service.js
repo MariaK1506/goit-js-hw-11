@@ -26,7 +26,10 @@ export default class ApiService {
       .then(({ hits, total, totalHits }) => {
         console.log('Totalhits: ', totalHits);
         console.log('Total', total);
+
+        this.onFirstPageNotify();
         this.incrementPage();
+
         if (total === 0) {
           return Notify.failure(
             'Sorry, there are no images matching your search query. Please try again.'
@@ -38,11 +41,16 @@ export default class ApiService {
           Notify.failure(
             'Were sorry, but youve reached the end of search results.'
           );
-          return hits;
         }
 
         return hits;
       });
+  }
+
+  onFirstPageNotify() {
+    if (this.page === 1) {
+      Notify.success(`Hooray! We found ${this.totalHits} images.`);
+    }
   }
 
   // noMorePages() {

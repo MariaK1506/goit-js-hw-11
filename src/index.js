@@ -35,7 +35,7 @@ async function onSearchForm(event) {
 function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendGalleryMarkup(hits);
-    // showLoadMoreBtn();
+    showLoadMoreBtn();
     onScroll();
     lightbox.refresh();
   });

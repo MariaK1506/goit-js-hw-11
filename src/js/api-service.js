@@ -23,34 +23,22 @@ export default class ApiService {
       .get(`${BASE_URL}${params}`)
       .then(response => response.data)
       .then(({ hits, total, totalHits }) => {
-        console.log('Totalhits: ', totalHits);
-        // console.log('Total', total);
-
         if (this.page === 1) {
-          console.log(5555);
           Notify.success(`Hooray! We found ${totalHits} images.`);
         }
 
-        this.incrementPage();
-
-        if (total === 0) {
-          console.log('Total', total);
-          return Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
-        }
-        console.log('TotalHits', totalHits);
-        console.log('Total', total);
-        if (totalHits === total) {
-          console.log('TotalHits', totalHits);
-          console.log('Total', total);
-
-          console.log(hideLoadMoreBtn());
-
+        if (totalHits - 40 * this.page <= 40) {
+          refs.loadMoreBtn.classList.add('is-hidden');
           Notify.failure(
             'Were sorry, but youve reached the end of search results.'
           );
         }
+        if (totalHits === 0) {
+          return Notify.failure(
+            'Sorry, there are no images matching your search query. Please try again.'
+          );
+        }
+        this.incrementPage();
 
         return hits;
       });

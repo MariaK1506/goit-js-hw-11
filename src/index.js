@@ -14,7 +14,7 @@ refs.loadMoreBtn.addEventListener('click', fetchHits);
 
 hideLoadMoreBtn();
 
-function onSearchForm(event) {
+async function onSearchForm(event) {
   event.preventDefault();
 
   apiService.query = event.currentTarget.elements.searchQuery.value.trim();
@@ -22,18 +22,23 @@ function onSearchForm(event) {
     return Notify.failure('What do you want to look for?');
   }
   apiService.resetPage();
-  clearGalleryList();
-  fetchHits();
+  try {
+    clearGalleryList();
+    await fetchHits();
+  } catch (error) {
+    console.log(error.message);
+  }
+  // clearGalleryList();
+  // fetchHits();
 }
 
 function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendGalleryMarkup(hits);
-    showLoadMoreBtn();
+    // showLoadMoreBtn();
     onScroll();
     lightbox.refresh();
   });
-  // lightbox.refresh();
 }
 
 function appendGalleryMarkup(hits) {

@@ -2,6 +2,8 @@
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
@@ -23,7 +25,7 @@ ul {
 img {
   display: block;
   max-width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 h1,
@@ -45,27 +47,32 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  padding: 25px 0 25px 0;
+  margin-bottom: 20px;
+  padding: 20px 0 10px 0;
 
   background-color: cadetblue;
 
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.5);
 }
 
+#search-form input {
+  border-radius: 5px;
+  padding: 5px;
+}
+
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  grid-gap: 20px;
-  max-width: calc(100vw - 80px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
   margin-left: auto;
   margin-right: auto;
+  padding: 30px;
   margin-bottom: 30px;
 }
 
 .photo-card {
-  margin-bottom: 10px;
-  width: 300px;
+  margin-bottom: 15px;
+  width: 400px;
 
   box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
@@ -76,12 +83,41 @@ a {
   }
 }
 
-.button {
+.wrapper {
+  width: 400px;
+  height: 300px;
+}
+button {
   outline: none;
+  margin-left: 10px;
   border: none;
   display: block;
+  padding: 10px 20px;
+  border-radius: 5px;
+
+  background-color: rgb(228, 174, 25);
+
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.load-more {
+  display: block;
+  padding: 10px 20px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 20px;
+
+  border: none;
+  border-radius: 5px;
+
+  background-color: rgb(228, 174, 25);
+
   cursor: pointer;
 }
 

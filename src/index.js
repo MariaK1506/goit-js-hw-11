@@ -1,6 +1,6 @@
-import { getRefs } from './js/get-refs';
+import getRefs from './js/get-refs';
 import galleryTpl from './templates/galleryImages.hbs';
-import { ApiService } from './js/api-service';
+import ApiService from './js/api-service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
@@ -36,13 +36,18 @@ function fetchHits() {
   apiService.fetchImages().then(hits => {
     appendGalleryMarkup(hits);
     showLoadMoreBtn();
-    onScroll();
+
+    if (refs.galleryList.hasChildNodes()) {
+      onScroll();
+    }
+
     lightbox.refresh();
   });
 }
 
 function appendGalleryMarkup(hits) {
   refs.galleryList.insertAdjacentHTML('beforeend', galleryTpl(hits));
+
   const options = {
     captions: true,
     captionsData: 'alt',
@@ -68,9 +73,8 @@ function showLoadMoreBtn() {
 }
 
 function onScroll() {
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
+  const { height: cardHeight } =
+    refs.galleryList.firstElementChild.getBoundingClientRect();
 
   window.scrollBy({
     top: cardHeight * 2,

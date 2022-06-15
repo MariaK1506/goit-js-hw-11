@@ -1,4 +1,4 @@
-export default function getRefs() {
+export function getRefs() {
   return {
     searchForm: document.querySelector('.search-form'),
 

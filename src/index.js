@@ -1,6 +1,6 @@
-import getRefs from './js/get-refs';
+import { getRefs } from './js/get-refs';
 import galleryTpl from './templates/galleryImages.hbs';
-import ApiService from './js/api-service';
+import { ApiService } from './js/api-service';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';

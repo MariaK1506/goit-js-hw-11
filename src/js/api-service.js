@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getRefs from './get-refs';
+import { getRefs } from './get-refs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 // const BASE_URL = 'https://pixabay.com/api/';
@@ -8,7 +8,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = getRefs();
 
-export default class ApiService {
+export class ApiService {
   constructor() {
     this.searchQuery = '';
     this.page = 1;

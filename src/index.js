@@ -14,7 +14,7 @@ refs.loadMoreBtn.addEventListener('click', fetchHits);
 
 hideLoadMoreBtn();
 
-async function onSearchForm(event) {
+function onSearchForm(event) {
   event.preventDefault();
 
   apiService.query = event.currentTarget.elements.searchQuery.value.trim();
@@ -22,14 +22,9 @@ async function onSearchForm(event) {
     return Notify.failure('What do you want to look for?');
   }
   apiService.resetPage();
-  try {
-    clearGalleryList();
-    await fetchHits();
-  } catch (error) {
-    console.log(error.message);
-  }
-  // clearGalleryList();
-  // fetchHits();
+
+  clearGalleryList();
+  fetchHits();
 }
 
 function fetchHits() {

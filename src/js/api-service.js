@@ -3,6 +3,7 @@ import getRefs from './get-refs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const refs = getRefs();
+const axios = require('axios');
 
 export default class ApiService {
   constructor() {
@@ -13,48 +14,52 @@ export default class ApiService {
   }
 
   async fetchImages() {
-    const BASE_URL = 'https://pixabay.com/api/';
-    const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
-    const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
+    try {
+      const BASE_URL = 'https://pixabay.com/api/';
+      const API_KEY = '27971983-b3c7a3ee1797ece32c4360e82';
+      const params = `?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${this.per_page}&page=${this.page}`;
 
-    return await axios
-      .get(`${BASE_URL}${params}`)
-      .then(response => response.data)
-      .then(({ hits, totalHits }) => {
-        this.totalPages = Math.ceil(totalHits / this.per_page);
+      return await axios
+        .get(`${BASE_URL}${params}`)
+        .then(response => response.data)
+        .then(({ hits, totalHits }) => {
+          this.totalPages = Math.ceil(totalHits / this.per_page);
 
-        if (this.page === 1) {
-          Notify.success(`Hooray! We found ${totalHits} images.`);
-        }
+          if (this.page === 1 && totalHits >= 1) {
+            Notify.success(`Hooray! We found ${totalHits} images.`);
+          }
 
-        if (this.page === this.totalPages) {
-          setTimeout(() => {
-            refs.loadMoreBtn.classList.add('is-hidden');
-          }, 0);
+          if (this.page === this.totalPages) {
+            setTimeout(() => {
+              refs.loadMoreBtn.classList.add('is-hidden');
+            }, 0);
 
-          Notify.failure(
-            'Were sorry, but youve reached the end of search results.'
-          );
-        }
-        // if (totalHits - 40 * this.page <= 40) {
-        //   setTimeout(() => {
-        //     refs.loadMoreBtn.classList.add('is-hidden');
-        //   }, 0);
+            Notify.failure(
+              'Were sorry, but youve reached the end of search results.'
+            );
+          }
+          // if (totalHits - 40 * this.page <= 40) {
+          //   setTimeout(() => {
+          //     refs.loadMoreBtn.classList.add('is-hidden');
+          //   }, 0);
 
-        //   Notify.failure(
-        //     'Were sorry, but youve reached the end of search results.'
-        //   );
-        // }
-        if (totalHits === 0) {
-          return Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
-        }
+          //   Notify.failure(
+          //     'Were sorry, but youve reached the end of search results.'
+          //   );
+          // }
+          if (totalHits === 0) {
+            return Notify.failure(
+              'Sorry, there are no images matching your search query. Please try again.'
+            );
+          }
 
-        this.incrementPage();
+          this.incrementPage();
 
-        return hits;
-      });
+          return hits;
+        });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   incrementPage() {

@@ -21,8 +21,9 @@ function onSearchForm(event) {
   if (apiService.query === '') {
     return Notify.failure('What do you want to look for?');
   }
-  apiService.resetPage();
 
+  hideLoadMoreBtn();
+  apiService.resetPage();
   clearGalleryList();
   fetchHits();
 }
